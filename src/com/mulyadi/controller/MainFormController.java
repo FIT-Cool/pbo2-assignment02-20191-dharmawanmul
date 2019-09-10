@@ -66,21 +66,6 @@ public class MainFormController implements Initializable {
         items = FXCollections.observableArrayList();
         categories = FXCollections.observableArrayList();
         comboBox.setItems(categories);
-
-    }
-
-    @FXML
-    private void tableClicked(MouseEvent mouseEvent) {
-        Item i = new Item();
-
-    }
-
-    @FXML
-    private void BtnSaved(ActionEvent actionEvent) {
-        Item item = new Item();
-        item.setName(nameTxt.getText());
-        item.setPrice(Integer.parseInt(priceTxt.getText()));
-        items.add(item);
         tableDepartment.setItems(items);
         col01.setCellValueFactory(data -> {
             Item i = data.getValue();
@@ -92,9 +77,24 @@ public class MainFormController implements Initializable {
         });
         col03.setCellValueFactory(data -> {
             Item k = data.getValue();
-            return new SimpleStringProperty(k.getCategory().getName());
+            return new SimpleStringProperty(k.getCategory().toString());
         });
     }
+
+    @FXML
+    private void tableClicked(MouseEvent mouseEvent) {
+        /*Item i = new Item();
+*/
+    }
+
+    @FXML
+    private void BtnSaved(ActionEvent actionEvent) {
+        Item item = new Item();
+        item.setName(nameTxt.getText());
+        item.setPrice(Double.parseDouble(priceTxt.getText()));
+        items.add(item);
+    }
+
 
     @FXML
     private void btnReset(ActionEvent actionEvent) {

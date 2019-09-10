@@ -29,8 +29,8 @@ public class Item {
         this.category = category;
     }
 
-    @Override
+/*    @Override
     public String toString() {
         return String.valueOf(this.price);
-    }
+    }*/
 }
