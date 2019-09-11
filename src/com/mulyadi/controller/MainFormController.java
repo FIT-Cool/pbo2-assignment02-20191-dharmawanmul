@@ -58,24 +58,29 @@ public class MainFormController implements Initializable {
     private void saveCatBtn(ActionEvent actionEvent) {
         Category cat = new Category();
         cat.setName(catName.getText().trim());
-        boolean found = false;
-        for(Category i : categories) {
-            if (i.getName().equals(cat.getName())) {
-                found = true;
-                alert.setContentText("Duplicate category name");
-                alert.showAndWait();
-                break;
-            }
+        if (cat.getName().equals("")) {
+            alert.setContentText("Please fill category name");
+            alert.showAndWait();
         }
-        if (!found) {
-            categories.add(cat);
+        else {
+            boolean found = false;
+            for(Category i : categories) {
+                if (i.getName().equals(cat.getName())) {
+                    found = true;
+                    alert.setContentText("Duplicate category name");
+                    alert.showAndWait();
+                    break;
+                }
+            }
+            if (!found) {
+                categories.add(cat);
+            }
         }
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         updateBtn.setDisable(true);
-
         items = FXCollections.observableArrayList();
         categories = FXCollections.observableArrayList();
         comboBox.setItems(categories);
@@ -134,13 +139,9 @@ public class MainFormController implements Initializable {
         saveBtn.setDisable(true);
         updateBtn.setDisable(false);
         Item items = tableDepartment.getSelectionModel().getSelectedItem();
-/*      nameTxt.setText(items.getName());
-        priceTxt.setText(String.valueOf(items.getPrice()));
-        comboBox.setValue(items.getCategory());*/
         items.setName(nameTxt.getText());
         items.setPrice(Double.valueOf(priceTxt.getText()));
         items.setCategory(comboBox.getValue());
         tableDepartment.refresh();
-
     }
 }
