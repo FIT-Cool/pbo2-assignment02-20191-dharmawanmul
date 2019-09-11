@@ -40,10 +40,10 @@ public class MainFormController implements Initializable {
     private Button updateBtn;
     private ObservableList<Item> items;
     private ObservableList<Category> categories;
+    Alert alert = new Alert(Alert.AlertType.ERROR);
 
     @FXML
     private void saveBtn(ActionEvent actionEvent) {
-
     }
 
     @FXML
@@ -58,11 +58,24 @@ public class MainFormController implements Initializable {
     private void saveCatBtn(ActionEvent actionEvent) {
         Category cat = new Category();
         cat.setName(catName.getText().trim());
-        categories.add(cat);
+        boolean found = false;
+        for(Category i : categories) {
+            if (i.getName().equals(cat.getName())) {
+                found = true;
+                alert.setContentText("Duplicate category name");
+                alert.showAndWait();
+                break;
+            }
+        }
+        if (!found) {
+            categories.add(cat);
+        }
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        updateBtn.setDisable(true);
+
         items = FXCollections.observableArrayList();
         categories = FXCollections.observableArrayList();
         comboBox.setItems(categories);
@@ -77,30 +90,57 @@ public class MainFormController implements Initializable {
         });
         col03.setCellValueFactory(data -> {
             Item k = data.getValue();
-            return new SimpleStringProperty(k.getCategory().toString());
+            return new SimpleStringProperty(k.getCategory().getName());
         });
     }
 
     @FXML
     private void tableClicked(MouseEvent mouseEvent) {
-        /*Item i = new Item();
-*/
+        Item c = tableDepartment.getSelectionModel().getSelectedItem();
+        nameTxt.setText(c.getName());
+        priceTxt.setText(String.valueOf(c.getPrice()));
+        comboBox.setValue(c.getCategory());
+        updateBtn.setDisable(false);
     }
 
     @FXML
     private void BtnSaved(ActionEvent actionEvent) {
         Item item = new Item();
-        item.setName(nameTxt.getText());
-        item.setPrice(Double.parseDouble(priceTxt.getText()));
-        items.add(item);
+        if (nameTxt.getText().isEmpty() || priceTxt.getText().isEmpty() || comboBox.getValue() == null) {
+            alert.setContentText("Please fill name/ price/ category");
+            alert.showAndWait();
+        }
+        else {
+            item.setName(nameTxt.getText());
+            item.setPrice(Double.parseDouble(priceTxt.getText()));
+            item.setCategory(comboBox.getValue());
+            items.add(item);
+        }
     }
 
 
     @FXML
     private void btnReset(ActionEvent actionEvent) {
+        nameTxt.setText("");
+        priceTxt.setText("");
+        comboBox.setValue(null);
+        catName.setText("");
+        saveBtn.setDisable(false);
+        updateBtn.setDisable(true);
     }
 
     @FXML
     private void btnUpdate(ActionEvent actionEvent) {
+        saveBtn.setDisable(true);
+        updateBtn.setDisable(false);
+        Item items = tableDepartment.getSelectionModel().getSelectedItem();
+/*      nameTxt.setText(items.getName());
+        priceTxt.setText(String.valueOf(items.getPrice()));
+        comboBox.setValue(items.getCategory());*/
+        items.setName(nameTxt.getText());
+        items.setPrice(Double.valueOf(priceTxt.getText()));
+        items.setCategory(comboBox.getValue());
+        tableDepartment.refresh();
+
     }
 }
