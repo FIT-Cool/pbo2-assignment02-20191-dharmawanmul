@@ -111,15 +111,26 @@ public class MainFormController implements Initializable {
     @FXML
     private void BtnSaved(ActionEvent actionEvent) {
         Item item = new Item();
+        boolean found = false;
         if (nameTxt.getText().isEmpty() || priceTxt.getText().isEmpty() || comboBox.getValue() == null) {
             alert.setContentText("Please fill name/ price/ category");
             alert.showAndWait();
         }
         else {
             item.setName(nameTxt.getText());
-            item.setPrice(Double.parseDouble(priceTxt.getText()));
-            item.setCategory(comboBox.getValue());
-            items.add(item);
+            for (Item i : items) {
+                if (i.getName().equals(item.getName())) {
+                    found = true;
+                    alert.setContentText("Duplicate item found");
+                    alert.showAndWait();
+                    break;
+                }
+            }
+            if (!found) {
+                item.setPrice(Double.parseDouble(priceTxt.getText()));
+                item.setCategory(comboBox.getValue());
+                items.add(item);
+            }
         }
     }
 
